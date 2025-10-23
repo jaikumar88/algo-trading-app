@@ -40,7 +40,7 @@ jobs:
       - name: Build
         run: |
           cd client
-          npm run build
+          npm run build:github
         env:
           NODE_ENV: production
           VITE_API_URL: https://uncurdling-joane-pantomimical.ngrok-free.dev
