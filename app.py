@@ -26,7 +26,12 @@ except ImportError:
         LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO')
         
         def get_cors_origins(self):
-            return ["http://localhost:5173", "http://localhost:3000"]
+            return [
+                "http://localhost:5173",
+                "http://localhost:5174",
+                "http://localhost:3000",
+                "https://jaikumar88.github.io"  # GitHub Pages
+            ]
     
     def get_settings():
         return Settings()

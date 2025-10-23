@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './RiskManagement.css';
-import { apiUrl } from '../../../services/api'
+import { apiClient } from '../../../services/api'
 
 const RiskManagement = () => {
   const [loading, setLoading] = useState(true);
@@ -63,7 +63,7 @@ const RiskManagement = () => {
 
   const fetchRiskSettings = async () => {
     try {
-      const response = await axios.get(apiUrl('/api/risk/settings'));
+      const response = await apiClient.get('/api/risk/settings');
       if (response.data.settings) {
         setSettings(prev => ({ ...prev, ...response.data.settings }));
       }
@@ -76,7 +76,7 @@ const RiskManagement = () => {
 
   const fetchRiskStats = async () => {
     try {
-      const response = await axios.get(apiUrl('/api/risk/stats'));
+      const response = await apiClient.get('/api/risk/stats');
       if (response.data) {
         setStats(response.data);
       }
@@ -88,7 +88,7 @@ const RiskManagement = () => {
   const handleSaveSettings = async () => {
     setSaving(true);
     try {
-      await axios.post(apiUrl('/api/risk/settings'), settings);
+      await apiClient.post('/api/risk/settings', settings);
       alert('Risk management settings saved successfully!');
     } catch (err) {
       alert('Failed to save settings: ' + (err.response?.data?.error || err.message));
@@ -109,7 +109,7 @@ const RiskManagement = () => {
     }
     
     try {
-      await axios.post(apiUrl('/api/risk/emergency-close'));
+      await apiClient.post('/api/risk/emergency-close');
       alert('All positions closed successfully!');
       fetchRiskStats();
     } catch (err) {
@@ -125,7 +125,7 @@ const RiskManagement = () => {
     }
     
     try {
-      await axios.post(apiUrl('/api/risk/panic-mode'), { enabled: newMode });
+      await apiClient.post('/api/risk/panic-mode', { enabled: newMode });
       setSettings(prev => ({ ...prev, panic_mode: newMode }));
       alert(newMode ? 'Panic mode ENABLED' : 'Panic mode DISABLED');
     } catch (err) {

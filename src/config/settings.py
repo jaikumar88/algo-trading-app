@@ -80,7 +80,12 @@ class Settings(BaseSettings):
     
     # CORS
     CORS_ORIGINS: List[str] = Field(
-        default=["http://localhost:5174", "http://localhost:3000"],
+        default=[
+            "http://localhost:5173",
+            "http://localhost:5174", 
+            "http://localhost:3000",
+            "https://jaikumar88.github.io"  # GitHub Pages
+        ],
         env="CORS_ORIGINS"
     )
     

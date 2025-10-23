@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import axios from 'axios'
-import { apiUrl } from '../../../services/api'
+import { apiClient } from '../../../services/api'
 import './Dashboard.css'
 
 export default function Dashboard(){
@@ -25,12 +24,12 @@ export default function Dashboard(){
       setLoading(true)
       setError(null)
       
-      // Fetch all data in parallel using proper API URLs
+      // Fetch all data in parallel using apiClient with ngrok headers
       const [tradesRes, positionsRes, instrumentsRes, settingsRes] = await Promise.all([
-        axios.get(apiUrl('/api/trading/trades?limit=10')),
-        axios.get(apiUrl('/api/trading/positions')),
-        axios.get(apiUrl('/api/trading/instruments')),
-        axios.get(apiUrl('/api/trading/settings'))
+        apiClient.get('/api/trading/trades?limit=10'),
+        apiClient.get('/api/trading/positions'),
+        apiClient.get('/api/trading/instruments'),
+        apiClient.get('/api/trading/settings')
       ])
       
       const trades = tradesRes.data.trades || []

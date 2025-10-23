@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Positions.css';
-import { apiUrl } from '../../../services/api'
+import { apiClient } from '../../../services/api'
 
 const Positions = () => {
   const [positions, setPositions] = useState([]);
@@ -25,7 +25,7 @@ const Positions = () => {
 
   const fetchPositions = async () => {
     try {
-      const response = await axios.get(apiUrl('/api/trading/positions'));
+      const response = await apiClient.get('/api/trading/positions');
       setPositions(response.data.positions || []);
       setLoading(false);
       setError(null);

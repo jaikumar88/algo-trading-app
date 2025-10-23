@@ -1,1 +1,1 @@
-Short At Price=3863.12, Symbol : ETHUSD, Volume=24.64931079 Exchange= COINBASE
+LongAt Price=3880.94, Symbol : ETHUSD, Volume=0.01348441 Exchange= COINBASE
