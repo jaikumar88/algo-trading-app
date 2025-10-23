@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './SystemControl.css';
+import { apiUrl } from '../../../services/api'
 
 const SystemControl = () => {
   const [settings, setSettings] = useState({});
@@ -17,8 +18,8 @@ const SystemControl = () => {
     setLoading(true);
     try {
       const [settingsRes, allocationsRes] = await Promise.all([
-        axios.get('/api/trading/settings'),
-        axios.get('/api/trading/fund-allocations')
+        axios.get(apiUrl('/api/trading/settings')),
+        axios.get(apiUrl('/api/trading/fund-allocations'))
       ]);
 
       // Convert settings array to object

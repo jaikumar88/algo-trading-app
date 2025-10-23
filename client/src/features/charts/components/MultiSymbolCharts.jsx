@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './MultiSymbolCharts.css';
+import { apiUrl } from '../../../services/api'
 
 const MultiSymbolCharts = () => {
   const [instruments, setInstruments] = useState([]);
@@ -62,7 +63,7 @@ const MultiSymbolCharts = () => {
 
   const fetchInstruments = async () => {
     try {
-      const response = await axios.get('/api/trading/instruments');
+      const response = await axios.get(apiUrl('/api/trading/instruments'));
       const data = response.data.instruments || response.data || [];
       
       // Filter enabled instruments and map to TradingView symbols

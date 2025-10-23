@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import axios from 'axios'
+import { apiUrl } from '../../../services/api'
 import './Dashboard.css'
 
 export default function Dashboard(){
@@ -24,12 +25,12 @@ export default function Dashboard(){
       setLoading(true)
       setError(null)
       
-      // Fetch all data in parallel (using proxy, no need for full URL)
+      // Fetch all data in parallel using proper API URLs
       const [tradesRes, positionsRes, instrumentsRes, settingsRes] = await Promise.all([
-        axios.get('/api/trading/trades?limit=10'),
-        axios.get('/api/trading/positions'),
-        axios.get('/api/trading/instruments'),
-        axios.get('/api/trading/settings')
+        axios.get(apiUrl('/api/trading/trades?limit=10')),
+        axios.get(apiUrl('/api/trading/positions')),
+        axios.get(apiUrl('/api/trading/instruments')),
+        axios.get(apiUrl('/api/trading/settings'))
       ])
       
       const trades = tradesRes.data.trades || []

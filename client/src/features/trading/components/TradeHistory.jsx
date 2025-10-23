@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './TradeHistory.css';
+import { apiUrl } from '../../../services/api'
 
 const TradeHistory = () => {
   const [trades, setTrades] = useState([]);
@@ -31,7 +32,7 @@ const TradeHistory = () => {
   
   const fetchCurrentPrices = async () => {
     try {
-      const response = await axios.get('/api/trading/prices');
+      const response = await axios.get(apiUrl('/api/trading/prices'));
       if (response.data.prices) {
         setCurrentPrices(response.data.prices);
       }
@@ -57,7 +58,7 @@ const TradeHistory = () => {
         params.symbol = filters.symbol;
       }
 
-      const response = await axios.get('/api/trading/trades', { params });
+      const response = await axios.get(apiUrl('/api/trading/trades'), { params });
       console.log('Trades API Response:', response.data);
       console.log('Number of trades:', response.data.trades?.length);
       

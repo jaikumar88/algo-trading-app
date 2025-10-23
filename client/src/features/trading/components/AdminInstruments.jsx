@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import './AdminInstruments.css';
+import { apiUrl } from '../../../services/api'
 
 const AdminInstruments = () => {
   const [instruments, setInstruments] = useState([]);
@@ -21,7 +22,7 @@ const AdminInstruments = () => {
   const fetchInstruments = async () => {
     setLoading(true);
     try {
-      const response = await axios.get('/api/trading/instruments');
+      const response = await axios.get(apiUrl('/api/trading/instruments'));
       setInstruments(response.data.instruments || []);
       setError(null);
     } catch (err) {
@@ -41,7 +42,7 @@ const AdminInstruments = () => {
     }
 
     try {
-      await axios.post('/api/trading/instruments', formData);
+      await axios.post(apiUrl('/api/trading/instruments'), formData);
       alert('Instrument added successfully!');
       setShowAddModal(false);
       setFormData({ symbol: '', name: '', enabled: true });

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import Select from 'react-select';
 import axios from 'axios';
 import './TradingViewChart.css';
+import { apiUrl } from '../../../services/api'
 
 const TradingViewAdvanced = () => {
   const containerRef = useRef(null);
@@ -28,7 +29,7 @@ const TradingViewAdvanced = () => {
 
   const fetchInstruments = async () => {
     try {
-      const response = await axios.get('/api/trading/instruments');
+      const response = await axios.get(apiUrl('/api/trading/instruments'));
       
       // Map to TradingView symbols
       const instrumentOptions = response.data.map(inst => {
