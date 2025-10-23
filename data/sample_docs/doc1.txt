@@ -1,0 +1,3 @@
+
+OpenAI provides powerful APIs for text generation and embeddings. The Embeddings API converts text into numerical vectors which can be used for semantic search and retrieval.
+

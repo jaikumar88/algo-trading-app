@@ -1,0 +1,488 @@
+.system-control-container {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.control-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.control-header h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.system-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+}
+
+.system-status.online {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.system-status.offline {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.system-status.online .status-dot {
+  background: #10b981;
+}
+
+.system-status.offline .status-dot {
+  background: #ef4444;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Control Section */
+.control-section {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.section-header {
+  margin-bottom: 25px;
+  border-bottom: 2px solid #f3f4f6;
+  padding-bottom: 15px;
+}
+
+.section-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 5px 0;
+}
+
+.section-header p {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Master Control */
+.master-control {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.master-control .section-header {
+  border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
+.master-control .section-header h2,
+.master-control .section-header p {
+  color: white;
+}
+
+.master-switch-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.switch-info h3 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+.switch-info p {
+  font-size: 14px;
+  opacity: 0.9;
+  margin: 0;
+}
+
+.master-switch {
+  background: rgba(255, 255, 255, 0.2);
+  border: 3px solid white;
+  color: white;
+  padding: 16px 32px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
+}
+
+.master-switch:hover:not(:disabled) {
+  background: white;
+  color: #667eea;
+  transform: scale(1.05);
+}
+
+.master-switch:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.switch-icon {
+  font-size: 24px;
+}
+
+/* Fund Settings */
+.fund-settings {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.setting-card {
+  background: #f9fafb;
+  padding: 20px;
+  border-radius: 12px;
+  border: 2px solid #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+.setting-card:hover {
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.setting-card label {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #374151;
+  margin-bottom: 10px;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.input-group:focus-within {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.input-prefix,
+.input-suffix {
+  padding: 12px 16px;
+  background: #f3f4f6;
+  font-weight: 700;
+  color: #6b7280;
+  font-size: 16px;
+}
+
+.input-group input {
+  flex: 1;
+  border: none;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  outline: none;
+}
+
+.setting-card small {
+  display: block;
+  margin-top: 8px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.checkbox-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.checkbox-card label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+.checkbox-card input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+/* Overview Grid */
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.overview-card {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition: all 0.3s ease;
+  border: 2px solid #e5e7eb;
+}
+
+.overview-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border-color: #667eea;
+}
+
+.overview-icon {
+  font-size: 32px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 10px;
+}
+
+.overview-content {
+  flex: 1;
+}
+
+.overview-label {
+  font-size: 12px;
+  color: #6b7280;
+  margin-bottom: 5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.overview-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.overview-value.loss {
+  color: #ef4444;
+}
+
+/* Allocations Table */
+.allocations-table-container {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 2px solid #e5e7eb;
+}
+
+.allocations-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.allocations-table thead {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.allocations-table th {
+  padding: 16px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.allocations-table td {
+  padding: 16px;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 14px;
+  color: #4b5563;
+  font-weight: 500;
+}
+
+.allocations-table tbody tr {
+  transition: all 0.2s ease;
+}
+
+.allocations-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+.symbol-cell .symbol-badge {
+  background: #eff6ff;
+  color: #1e40af;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.available-cell {
+  color: #10b981;
+  font-weight: 700;
+}
+
+.loss-cell {
+  color: #ef4444;
+  font-weight: 700;
+}
+
+.risk-cell {
+  color: #f59e0b;
+  font-weight: 700;
+}
+
+.status-indicator {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  display: inline-block;
+}
+
+.status-indicator.active {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-indicator.inactive {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Risk Alert */
+.risk-alert {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-left: 4px solid #f59e0b;
+  padding: 20px;
+  border-radius: 12px;
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+  margin-top: 30px;
+}
+
+.alert-icon {
+  font-size: 32px;
+}
+
+.alert-content {
+  flex: 1;
+  font-size: 14px;
+  color: #92400e;
+  line-height: 1.6;
+}
+
+.alert-content strong {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+/* Loading, Error */
+.loading,
+.error-message {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.loading {
+  color: #6b7280;
+  font-size: 16px;
+}
+
+.error-message {
+  color: #ef4444;
+  font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+.error-message button {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .control-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .master-switch-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .master-switch {
+    justify-content: center;
+  }
+
+  .fund-settings {
+    grid-template-columns: 1fr;
+  }
+
+  .overview-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .allocations-table-container {
+    overflow-x: scroll;
+  }
+
+  .allocations-table {
+    min-width: 800px;
+  }
+}

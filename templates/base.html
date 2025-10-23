@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}Trading App{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUa6zY2v1D6Y6H7Z6v6dQ3G1W5JqkZl1s0Jc4h4KfQ1u1n0t3e6Yz6l2Q" crossorigin="anonymous">
+  <link rel="stylesheet" href="/static/css/style.css">
+    {% block head_js %}{% endblock %}
+  </head>
+  <body>
+    <div class="d-flex app">
+      <!-- Desktop sidebar -->
+      <nav class="sidebar d-none d-lg-block" id="sidebar">
+        <div class="brand">Trading</div>
+        <div class="nav flex-column">
+          <a href="/dashboard" class="nav-link" id="nav-dashboard">Dashboard</a>
+          <a href="/signals" class="nav-link" id="nav-signals">Signals</a>
+          <a href="/trades" class="nav-link" id="nav-trades">Trades</a>
+        </div>
+      </nav>
+
+      <!-- Offcanvas for small screens -->
+      <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="sidebarOffcanvasLabel">Trading</h5>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <div class="nav flex-column">
+            <a href="/dashboard" class="nav-link" id="nav-dashboard-sm">Dashboard</a>
+            <a href="/signals" class="nav-link" id="nav-signals-sm">Signals</a>
+            <a href="/trades" class="nav-link" id="nav-trades-sm">Trades</a>
+          </div>
+        </div>
+      </div>
+
+      <main class="main">
+        <div class="d-flex align-items-center mb-3">
+          <button class="btn btn-outline-primary me-2 d-lg-none" id="btn-toggle">☰</button>
+          <h2 class="mb-0">{% block page_title %}Trading App{% endblock %}</h2>
+        </div>
+
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+    {% block scripts %}{% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoY1o3KzW5nQ2v5qj3l2o4A/6z8K" crossorigin="anonymous"></script>
+    <script>
+      // small inline fallback; full behavior in /static/js/app.js
+    </script>
+    <script src="/static/js/app.js"></script>
+  </body>
+</html>

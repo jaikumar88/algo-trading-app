@@ -1,0 +1,371 @@
+.chart-container-wrapper {
+  padding: 20px;
+  max-width: 1600px;
+  margin: 0 auto;
+  background: #0f0f0f;
+  min-height: 100vh;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.chart-title-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chart-header h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+}
+
+.price-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.live-price {
+  font-size: 32px;
+  font-weight: 700;
+  color: #26a69a;
+}
+
+.price-change {
+  font-size: 18px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.price-change.positive {
+  background: rgba(38, 166, 154, 0.2);
+  color: #26a69a;
+}
+
+.price-change.negative {
+  background: rgba(239, 83, 80, 0.2);
+  color: #ef5350;
+}
+
+/* Controls */
+.chart-controls {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #1a1a1a;
+  border-radius: 12px;
+  flex-wrap: wrap;
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.control-group label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.instrument-select,
+.timeframe-select {
+  min-width: 250px;
+}
+
+/* React Select Custom Styling */
+.select__control {
+  background: #2a2a2a !important;
+  border: 1px solid #3a3a3a !important;
+  border-radius: 8px !important;
+  min-height: 42px !important;
+}
+
+.select__control:hover {
+  border-color: #4a4a4a !important;
+}
+
+.select__control--is-focused {
+  border-color: #667eea !important;
+  box-shadow: 0 0 0 1px #667eea !important;
+}
+
+.select__menu {
+  background: #2a2a2a !important;
+  border: 1px solid #3a3a3a !important;
+  border-radius: 8px !important;
+}
+
+.select__option {
+  background: #2a2a2a !important;
+  color: #d1d5db !important;
+}
+
+.select__option:hover {
+  background: #3a3a3a !important;
+}
+
+.select__option--is-selected {
+  background: #667eea !important;
+  color: white !important;
+}
+
+.select__single-value {
+  color: #d1d5db !important;
+}
+
+.select__input {
+  color: #d1d5db !important;
+}
+
+.select__placeholder {
+  color: #6b7280 !important;
+}
+
+.refresh-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin-top: auto;
+}
+
+.refresh-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* Indicators Panel */
+.indicators-panel {
+  margin-bottom: 20px;
+  padding: 20px;
+  background: #1a1a1a;
+  border-radius: 12px;
+}
+
+.indicators-panel h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0 0 15px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.indicators-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.indicator-btn {
+  background: #2a2a2a;
+  color: #9ca3af;
+  border: 2px solid #3a3a3a;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.indicator-btn:hover {
+  border-color: #667eea;
+  color: #667eea;
+}
+
+.indicator-btn.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: #667eea;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+/* Chart Wrapper */
+.chart-wrapper {
+  position: relative;
+  background: #1a1a1a;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.chart-container {
+  width: 100%;
+}
+
+.chart-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 20px 40px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  z-index: 10;
+}
+
+/* Chart Info */
+.chart-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.info-card {
+  background: #1a1a1a;
+  padding: 15px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid #2a2a2a;
+}
+
+.info-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.live-badge {
+  color: #26a69a;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .chart-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .instrument-select,
+  .timeframe-select {
+    width: 100%;
+  }
+
+  .refresh-btn {
+    width: 100%;
+  }
+
+  .indicators-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+
+  .price-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .chart-container-wrapper {
+    padding: 10px;
+  }
+
+  .chart-header h1 {
+    font-size: 22px;
+  }
+
+  .live-price {
+    font-size: 24px;
+  }
+
+  .price-change {
+    font-size: 14px;
+  }
+
+  .chart-wrapper {
+    height: 400px;
+  }
+
+  .indicators-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Legend Styling */
+.chart-legend {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(26, 26, 26, 0.9);
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #d1d5db;
+  z-index: 5;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 5px;
+}
+
+.legend-color {
+  width: 20px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+/* Animation */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.live-badge::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background: #26a69a;
+  border-radius: 50%;
+  display: inline-block;
+  animation: pulse 2s ease-in-out infinite;
+}

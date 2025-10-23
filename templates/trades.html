@@ -1,0 +1,519 @@
+{% extends 'base.html' %}
+
+{% block title %}Active Trades - Trading App{% endblock %}
+
+{% block page_title %}Active Trades{% endblock %}
+
+{% block content %}
+  <div class="container-fluid">
+    <!-- Summary Cards -->
+    <div class="row g-3 mb-3">
+      <div class="col-md-3">
+        <div class="card small">
+          <h6 class="text-muted">Open Trades</h6>
+          <div id="open-count" class="fs-4 fw-bold">...</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card small">
+          <h6 class="text-muted">Total Position Value</h6>
+          <div id="position-value" class="fs-4 fw-bold">...</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card small">
+          <h6 class="text-muted">Unrealized P&L</h6>
+          <div id="unrealized-pnl" class="fs-4 fw-bold">...</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card small">
+          <h6 class="text-muted">Today's Closed P&L</h6>
+          <div id="closed-pnl" class="fs-4 fw-bold">...</div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card small">
+          <h6 class="text-muted">Risk Management</h6>
+          <div class="small">
+            <div>SL Set: <strong id="slCount" class="text-danger">0</strong></div>
+            <div>TP Set: <strong id="tpCount" class="text-success">0</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Active Trades Table -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">Open Positions</h5>
+            <button class="btn btn-sm btn-primary" onclick="refreshTrades()">
+              <svg width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+              </svg>
+              Refresh
+            </button>
+          </div>
+          
+          <div class="table-responsive">
+            <table id="trades-table" class="table table-hover table-sm">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Symbol</th>
+                  <th>Direction</th>
+                  <th>Qty</th>
+                  <th>Entry Price</th>
+                  <th>Current Price</th>
+                  <th>P&L</th>
+                  <th>Stop Loss</th>
+                  <th>Target Price</th>
+                  <th>Trailing SL</th>
+                  <th>Duration</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          
+          <div id="no-trades" class="text-center text-muted p-4" style="display:none;">
+            No open trades
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Closed Trades -->
+    <div class="row mt-3">
+      <div class="col-12">
+        <div class="card">
+          <h5>Recent Closed Trades</h5>
+          <div class="table-responsive">
+            <table id="closed-trades-table" class="table table-sm">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Symbol</th>
+                  <th>Direction</th>
+                  <th>Entry</th>
+                  <th>Exit</th>
+                  <th>P&L</th>
+                  <th>Duration</th>
+                  <th>Closed At</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Trade Modal -->
+  <div class="modal fade" id="editTradeModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Trade</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="edit-trade-id">
+          
+          <div class="mb-3">
+            <strong>Trade Details:</strong>
+            <div id="edit-trade-info" class="mt-2 p-2 bg-light rounded"></div>
+          </div>
+          
+          <div class="mb-3">
+            <label for="edit-stop-loss" class="form-label">Stop Loss Price</label>
+            <input type="number" class="form-control" id="edit-stop-loss" step="0.00000001" placeholder="Leave empty to remove">
+            <small class="form-text text-muted">Trade will close automatically when price hits this level</small>
+          </div>
+          
+          <div class="mb-3">
+            <label for="edit-take-profit" class="form-label">Target Price (Take Profit)</label>
+            <input type="number" class="form-control" id="edit-take-profit" step="0.00000001" placeholder="Leave empty to remove">
+            <small class="form-text text-muted">Trade will close automatically when price hits this level</small>
+          </div>
+          
+          <div class="alert alert-info">
+            <strong>Note:</strong> Changes will be applied immediately to the running trade monitor.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" onclick="saveTrade()">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Close Trade Modal -->
+  <div class="modal fade" id="closeTradeModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Close Trade</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="close-trade-id">
+          <p>Are you sure you want to close this trade?</p>
+          <div id="close-trade-info" class="p-2 bg-light rounded"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger" onclick="confirmCloseTrade()">Close Trade</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+let currentPrices = {};
+let editModal, closeModal;
+
+document.addEventListener('DOMContentLoaded', function() {
+  editModal = new bootstrap.Modal(document.getElementById('editTradeModal'));
+  closeModal = new bootstrap.Modal(document.getElementById('closeTradeModal'));
+  
+  loadTrades();
+  loadClosedTrades();
+  
+  // Auto-refresh every 5 seconds
+  setInterval(loadTrades, 5000);
+});
+
+async function loadTrades() {
+  try {
+    const response = await fetch('/api/trading/trades?status=OPEN');
+    const data = await response.json();
+    
+    const tbody = document.querySelector('#trades-table tbody');
+    tbody.innerHTML = '';
+    
+    if (data.trades && data.trades.length > 0) {
+      document.getElementById('no-trades').style.display = 'none';
+      document.querySelector('#trades-table').style.display = 'table';
+      
+      let totalValue = 0;
+      let totalPnL = 0;
+      
+      let slCount = 0;
+      let tpCount = 0;
+      
+      data.trades.forEach(trade => {
+        const tr = createTradeRow(trade);
+        tbody.appendChild(tr);
+        
+        if (trade.total_cost) totalValue += parseFloat(trade.total_cost);
+        if (trade.unrealized_pnl) totalPnL += parseFloat(trade.unrealized_pnl);
+        
+        // Count SL/TP
+        if (trade.stop_loss && trade.stop_loss > 0) slCount++;
+        if (trade.take_profit && trade.take_profit > 0) tpCount++;
+      });
+      
+      // Update summary
+      document.getElementById('open-count').textContent = data.trades.length;
+      document.getElementById('position-value').textContent = '$' + totalValue.toFixed(2);
+      document.getElementById('unrealized-pnl').textContent = '$' + totalPnL.toFixed(2);
+      document.getElementById('unrealized-pnl').className = 'fs-4 fw-bold ' + (totalPnL >= 0 ? 'text-success' : 'text-danger');
+      document.getElementById('slCount').textContent = slCount + '/' + data.trades.length;
+      document.getElementById('tpCount').textContent = tpCount + '/' + data.trades.length;
+      
+    } else {
+      document.getElementById('no-trades').style.display = 'block';
+      document.querySelector('#trades-table').style.display = 'none';
+      document.getElementById('open-count').textContent = '0';
+      document.getElementById('position-value').textContent = '$0.00';
+      document.getElementById('unrealized-pnl').textContent = '$0.00';
+    }
+    
+  } catch (error) {
+    console.error('Error loading trades:', error);
+  }
+}
+
+function createTradeRow(trade) {
+  const tr = document.createElement('tr');
+  
+  const direction = trade.action === 'BUY' ? 'LONG' : 'SHORT';
+  const directionClass = trade.action === 'BUY' ? 'text-success' : 'text-danger';
+  
+  const entryPrice = parseFloat(trade.open_price);
+  const currentPrice = currentPrices[trade.symbol] || entryPrice;
+  
+  // Calculate P&L
+  let pnl = 0;
+  if (trade.action === 'BUY') {
+    pnl = (currentPrice - entryPrice) * parseFloat(trade.quantity);
+  } else {
+    pnl = (entryPrice - currentPrice) * parseFloat(trade.quantity);
+  }
+  
+  const pnlClass = pnl >= 0 ? 'text-success' : 'text-danger';
+  const pnlPercent = ((pnl / (entryPrice * parseFloat(trade.quantity))) * 100).toFixed(2);
+  
+  // Calculate duration
+  const openTime = new Date(trade.open_time);
+  const duration = formatDuration(Date.now() - openTime.getTime());
+  
+  // Check if trailing SL is active
+  const hasTrailingSL = trade.stop_loss && parseFloat(trade.stop_loss) !== parseFloat(trade.open_price);
+  
+  tr.innerHTML = `
+    <td><small class="text-muted">#${trade.id}</small></td>
+    <td><strong>${trade.symbol}</strong></td>
+    <td><span class="badge ${trade.action === 'BUY' ? 'bg-success' : 'bg-danger'}">${direction}</span></td>
+    <td>${parseFloat(trade.quantity).toFixed(4)}</td>
+    <td>$${parseFloat(trade.open_price).toFixed(2)}</td>
+    <td><strong class="text-primary">$${currentPrice.toFixed(2)}</strong></td>
+    <td class="${pnlClass}">
+      <div><strong>$${pnl.toFixed(2)}</strong></div>
+      <div><small>(${pnlPercent}%)</small></div>
+    </td>
+    <td>
+      ${trade.stop_loss ? 
+        '<strong class="text-danger">$' + parseFloat(trade.stop_loss).toFixed(2) + '</strong>' : 
+        '<span class="text-muted">Not Set</span>'
+      }
+    </td>
+    <td>
+      ${trade.take_profit ? 
+        '<strong class="text-success">$' + parseFloat(trade.take_profit).toFixed(2) + '</strong>' : 
+        '<span class="text-muted">Not Set</span>'
+      }
+    </td>
+    <td>${hasTrailingSL ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-secondary">Inactive</span>'}</td>
+    <td><small>${duration}</small></td>
+    <td>
+      <button class="btn btn-sm btn-outline-primary" onclick='editTrade(${JSON.stringify(trade)})' title="Edit SL/TP">
+        <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+        </svg>
+      </button>
+      <button class="btn btn-sm btn-outline-danger" onclick='closeTrade(${JSON.stringify(trade)})' title="Close Trade">
+        <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+        </svg>
+      </button>
+    </td>
+  `;
+  
+  return tr;
+}
+
+async function loadClosedTrades() {
+  try {
+    const today = new Date().toISOString().split('T')[0];
+    const response = await fetch(`/api/trading/trades?status=CLOSED&date=${today}&limit=10`);
+    const data = await response.json();
+    
+    const tbody = document.querySelector('#closed-trades-table tbody');
+    tbody.innerHTML = '';
+    
+    let todayPnL = 0;
+    
+    if (data.trades && data.trades.length > 0) {
+      data.trades.forEach(trade => {
+        const pnl = parseFloat(trade.profit_loss || 0);
+        todayPnL += pnl;
+        
+        const direction = trade.action === 'BUY' ? 'LONG' : 'SHORT';
+        const pnlClass = pnl >= 0 ? 'text-success' : 'text-danger';
+        
+        const openTime = new Date(trade.open_time);
+        const closeTime = new Date(trade.close_time);
+        const duration = formatDuration(closeTime - openTime);
+        
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${trade.id}</td>
+          <td>${trade.symbol}</td>
+          <td><span class="badge ${trade.action === 'BUY' ? 'bg-success' : 'bg-danger'}">${direction}</span></td>
+          <td>$${parseFloat(trade.open_price).toFixed(2)}</td>
+          <td>$${parseFloat(trade.close_price).toFixed(2)}</td>
+          <td class="${pnlClass}"><strong>$${pnl.toFixed(2)}</strong></td>
+          <td>${duration}</td>
+          <td>${closeTime.toLocaleTimeString()}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    } else {
+      tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted">No closed trades today</td></tr>';
+    }
+    
+    document.getElementById('closed-pnl').textContent = '$' + todayPnL.toFixed(2);
+    document.getElementById('closed-pnl').className = 'fs-4 fw-bold ' + (todayPnL >= 0 ? 'text-success' : 'text-danger');
+    
+  } catch (error) {
+    console.error('Error loading closed trades:', error);
+  }
+}
+
+function formatDuration(ms) {
+  const seconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+  
+  if (days > 0) return `${days}d ${hours % 24}h`;
+  if (hours > 0) return `${hours}h ${minutes % 60}m`;
+  if (minutes > 0) return `${minutes}m`;
+  return `${seconds}s`;
+}
+
+function editTrade(trade) {
+  document.getElementById('edit-trade-id').value = trade.id;
+  document.getElementById('edit-stop-loss').value = trade.stop_loss || '';
+  document.getElementById('edit-take-profit').value = trade.take_profit || '';
+  
+  const direction = trade.action === 'BUY' ? 'LONG' : 'SHORT';
+  const currentPrice = currentPrices[trade.symbol] || parseFloat(trade.open_price);
+  
+  let pnl = 0;
+  if (trade.action === 'BUY') {
+    pnl = (currentPrice - parseFloat(trade.open_price)) * parseFloat(trade.quantity);
+  } else {
+    pnl = (parseFloat(trade.open_price) - currentPrice) * parseFloat(trade.quantity);
+  }
+  
+  document.getElementById('edit-trade-info').innerHTML = `
+    <strong>#${trade.id} - ${trade.symbol}</strong><br>
+    Direction: <span class="badge ${trade.action === 'BUY' ? 'bg-success' : 'bg-danger'}">${direction}</span><br>
+    Entry: $${parseFloat(trade.open_price).toFixed(2)}<br>
+    Current: $${currentPrice.toFixed(2)}<br>
+    P&L: <span class="${pnl >= 0 ? 'text-success' : 'text-danger'}">$${pnl.toFixed(2)}</span>
+  `;
+  
+  editModal.show();
+}
+
+async function saveTrade() {
+  const tradeId = document.getElementById('edit-trade-id').value;
+  const stopLoss = document.getElementById('edit-stop-loss').value;
+  const takeProfit = document.getElementById('edit-take-profit').value;
+  
+  try {
+    const payload = {};
+    if (stopLoss !== '') payload.stop_loss = parseFloat(stopLoss);
+    if (takeProfit !== '') payload.take_profit = parseFloat(takeProfit);
+    
+    const response = await fetch(`/api/trading/trades/${tradeId}/modify`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    
+    if (response.ok) {
+      editModal.hide();
+      loadTrades();
+      showAlert('success', 'Trade updated successfully!');
+    } else {
+      const error = await response.json();
+      showAlert('danger', 'Error: ' + (error.error || 'Failed to update trade'));
+    }
+  } catch (error) {
+    console.error('Error saving trade:', error);
+    showAlert('danger', 'Error updating trade');
+  }
+}
+
+function closeTrade(trade) {
+  document.getElementById('close-trade-id').value = trade.id;
+  
+  const direction = trade.action === 'BUY' ? 'LONG' : 'SHORT';
+  const currentPrice = currentPrices[trade.symbol] || parseFloat(trade.open_price);
+  
+  let pnl = 0;
+  if (trade.action === 'BUY') {
+    pnl = (currentPrice - parseFloat(trade.open_price)) * parseFloat(trade.quantity);
+  } else {
+    pnl = (parseFloat(trade.open_price) - currentPrice) * parseFloat(trade.quantity);
+  }
+  
+  document.getElementById('close-trade-info').innerHTML = `
+    <strong>#${trade.id} - ${trade.symbol}</strong><br>
+    Direction: <span class="badge ${trade.action === 'BUY' ? 'bg-success' : 'bg-danger'}">${direction}</span><br>
+    Entry: $${parseFloat(trade.open_price).toFixed(2)}<br>
+    Current: $${currentPrice.toFixed(2)}<br>
+    Estimated P&L: <span class="${pnl >= 0 ? 'text-success' : 'text-danger'}"><strong>$${pnl.toFixed(2)}</strong></span>
+  `;
+  
+  closeModal.show();
+}
+
+async function confirmCloseTrade() {
+  const tradeId = document.getElementById('close-trade-id').value;
+  
+  try {
+    const response = await fetch(`/api/trading/trades/${tradeId}/close`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ closed_by_user: true })
+    });
+    
+    if (response.ok) {
+      closeModal.hide();
+      loadTrades();
+      loadClosedTrades();
+      showAlert('success', 'Trade closed successfully!');
+    } else {
+      const error = await response.json();
+      showAlert('danger', 'Error: ' + (error.error || 'Failed to close trade'));
+    }
+  } catch (error) {
+    console.error('Error closing trade:', error);
+    showAlert('danger', 'Error closing trade');
+  }
+}
+
+function refreshTrades() {
+  loadTrades();
+  loadClosedTrades();
+  showAlert('info', 'Refreshed!');
+}
+
+function showAlert(type, message) {
+  const alertDiv = document.createElement('div');
+  alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3`;
+  alertDiv.style.zIndex = '9999';
+  alertDiv.innerHTML = `
+    ${message}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  `;
+  document.body.appendChild(alertDiv);
+  
+  setTimeout(() => {
+    alertDiv.remove();
+  }, 3000);
+}
+
+// Simulate current prices (in production, fetch from API)
+async function updatePrices() {
+  try {
+    const response = await fetch('/api/trading/prices');
+    if (response.ok) {
+      const data = await response.json();
+      currentPrices = data.prices || {};
+    }
+  } catch (error) {
+    console.error('Error fetching prices:', error);
+  }
+}
+
+// Update prices every 2 seconds
+setInterval(updatePrices, 2000);
+updatePrices();
+</script>
+{% endblock %}

@@ -1,0 +1,156 @@
+:root {
+  --bg: #f4f6fb;
+  --panel: #fff;
+  --muted: #6b7280;
+  --accent: #0b5cff;
+}
+body {
+  background: var(--bg);
+  margin: 0;
+  font-family: Inter, system-ui, Segoe UI, Roboto, Arial;
+  color: #0f172a;
+}
+header {
+  background: var(--panel);
+}
+button {
+  background: transparent;
+  border: 1px solid #ddd;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+button:hover {
+  background: #f1f5f9;
+}
+button.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+table {
+  background: var(--panel);
+  border-radius: 8px;
+  overflow: hidden;
+  width: 100%;
+}
+th,
+td {
+  padding: 8px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+/* dark theme */
+.theme-dark {
+  --bg: #0b1220;
+  --panel: #0f1724;
+  --muted: #9aa4b2;
+  --accent: #3b82f6;
+  color: #e6eef8;
+}
+.theme-dark button:hover {
+  background: #1a2332;
+}
+.theme-dark th,
+.theme-dark td {
+  border-bottom-color: #1a2332;
+}
+
+.theme-toggle {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+}
+.theme-dark .theme-toggle {
+  background: #1a2332;
+  border-color: #374151;
+  color: #e6eef8;
+}
+
+/* Settings page styles */
+.settings-container {
+  max-width: 700px;
+  margin: 0 auto;
+}
+.settings-section {
+  background: var(--panel);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+.settings-section h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 1.1em;
+  color: var(--accent);
+}
+.setting-item {
+  margin-bottom: 16px;
+}
+.setting-item label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.setting-label {
+  font-weight: 600;
+  font-size: 0.9em;
+  color: var(--muted);
+}
+.theme-select,
+.api-input {
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background: var(--bg);
+  color: inherit;
+  font-size: 1em;
+  width: 100%;
+}
+.theme-dark .theme-select,
+.theme-dark .api-input {
+  border-color: #374151;
+  background: #0b1220;
+}
+.help-text {
+  color: var(--muted);
+  font-size: 0.85em;
+  display: block;
+  margin-top: 4px;
+}
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+.btn-primary:hover {
+  opacity: 0.9;
+}
+.btn-secondary {
+  background: transparent;
+  border: 1px solid var(--muted);
+  padding: 10px 16px;
+  border-radius: 6px;
+}
+.btn-secondary:hover {
+  background: var(--bg);
+}
+.save-message {
+  margin-top: 12px;
+  color: #10b981;
+  font-weight: 500;
+  font-size: 0.9em;
+}
+.about-text {
+  color: var(--muted);
+  line-height: 1.6;
+}

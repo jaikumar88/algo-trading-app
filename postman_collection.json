@@ -1,0 +1,1002 @@
+{
+  "info": {
+    "name": "RAG Trading System - Complete API Collection",
+    "description": "Comprehensive API collection for testing TradingView-style backend with chart data, trading operations, signals, and webhook endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "rag-trading-api-v1",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "apiPrefix",
+      "value": "/api",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "🏠 Health & Info",
+      "item": [
+        {
+          "name": "Root - Get API Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": ["{{baseUrl}}"],
+              "path": [""]
+            },
+            "description": "Get API name, version, and status"
+          },
+          "response": []
+        },
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            },
+            "description": "Check if the API is healthy"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📊 Chart Data APIs",
+      "item": [
+        {
+          "name": "Get All Instruments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/chart/instruments",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["chart", "instruments"]
+            },
+            "description": "Get list of all available trading instruments"
+          },
+          "response": []
+        },
+        {
+          "name": "Get OHLCV Data - BTCUSDT 1h",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/chart/ohlcv?symbol=BTCUSDT&timeframe=1h&limit=100",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["chart", "ohlcv"],
+              "query": [
+                {
+                  "key": "symbol",
+                  "value": "BTCUSDT",
+                  "description": "Trading symbol"
+                },
+                {
+                  "key": "timeframe",
+                  "value": "1h",
+                  "description": "1m, 5m, 15m, 30m, 1h, 4h, 1d, 1w"
+                },
+                {
+                  "key": "limit",
+                  "value": "100",
+                  "description": "Number of candles to return"
+                }
+              ]
+            },
+            "description": "Get OHLCV (candlestick) data for a symbol"
+          },
+          "response": []
+        },
+        {
+          "name": "Get OHLCV Data - ETHUSDT 15m",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/chart/ohlcv?symbol=ETHUSDT&timeframe=15m&limit=50",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["chart", "ohlcv"],
+              "query": [
+                {
+                  "key": "symbol",
+                  "value": "ETHUSDT"
+                },
+                {
+                  "key": "timeframe",
+                  "value": "15m"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            },
+            "description": "Get 15-minute candles for ETHUSDT"
+          },
+          "response": []
+        },
+        {
+          "name": "Get OHLCV Data - EURUSD 1d",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/chart/ohlcv?symbol=EURUSD&timeframe=1d&limit=30",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["chart", "ohlcv"],
+              "query": [
+                {
+                  "key": "symbol",
+                  "value": "EURUSD"
+                },
+                {
+                  "key": "timeframe",
+                  "value": "1d"
+                },
+                {
+                  "key": "limit",
+                  "value": "30"
+                }
+              ]
+            },
+            "description": "Get daily candles for EURUSD"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Latest Price - BTCUSDT",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/chart/latest-price?symbol=BTCUSDT",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["chart", "latest-price"],
+              "query": [
+                {
+                  "key": "symbol",
+                  "value": "BTCUSDT"
+                }
+              ]
+            },
+            "description": "Get current price with 24h statistics"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Latest Price - ETHUSDT",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/chart/latest-price?symbol=ETHUSDT",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["chart", "latest-price"],
+              "query": [
+                {
+                  "key": "symbol",
+                  "value": "ETHUSDT"
+                }
+              ]
+            },
+            "description": "Get current price for ETHUSDT"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Multi Symbol Prices",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"symbols\": [\"BTCUSDT\", \"ETHUSDT\", \"BNBUSDT\", \"EURUSD\", \"XAUUSD\"]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/chart/multi-symbol-prices",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["chart", "multi-symbol-prices"]
+            },
+            "description": "Get latest prices for multiple symbols in one request"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "💼 Trading Operations",
+      "item": [
+        {
+          "name": "Get All Trades",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/trading/trades?page=1&limit=50",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["trading", "trades"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number (1-indexed)"
+                },
+                {
+                  "key": "limit",
+                  "value": "50",
+                  "description": "Items per page"
+                },
+                {
+                  "key": "status",
+                  "value": "OPEN",
+                  "description": "Filter: OPEN or CLOSED",
+                  "disabled": true
+                },
+                {
+                  "key": "symbol",
+                  "value": "BTCUSDT",
+                  "description": "Filter by symbol",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Get all trades with pagination and optional filters"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Open Trades Only",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/trading/trades?status=OPEN&limit=100",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["trading", "trades"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "OPEN"
+                },
+                {
+                  "key": "limit",
+                  "value": "100"
+                }
+              ]
+            },
+            "description": "Get only open trades"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Closed Trades Only",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/trading/trades?status=CLOSED&limit=50",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["trading", "trades"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "CLOSED"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            },
+            "description": "Get only closed trades"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Trades by Symbol",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/trading/trades?symbol=ETHUSD&limit=50",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["trading", "trades"],
+              "query": [
+                {
+                  "key": "symbol",
+                  "value": "ETHUSD"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            },
+            "description": "Get trades for specific symbol"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🚀 Enhanced Trading APIs",
+      "item": [
+        {
+          "name": "Place Market Order - BUY",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"symbol\": \"BTCUSDT\",\n  \"action\": \"BUY\",\n  \"quantity\": 0.01,\n  \"order_type\": \"MARKET\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/trading/orders",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["trading", "orders"]
+            },
+            "description": "Place a market buy order"
+          },
+          "response": []
+        },
+        {
+          "name": "Place Market Order - SELL",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"symbol\": \"ETHUSDT\",\n  \"action\": \"SELL\",\n  \"quantity\": 0.1,\n  \"order_type\": \"MARKET\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/trading/orders",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["trading", "orders"]
+            },
+            "description": "Place a market sell order"
+          },
+          "response": []
+        },
+        {
+          "name": "Place Limit Order with SL/TP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"symbol\": \"BTCUSDT\",\n  \"action\": \"BUY\",\n  \"quantity\": 0.01,\n  \"order_type\": \"LIMIT\",\n  \"limit_price\": 50000.00,\n  \"stop_loss\": 48000.00,\n  \"take_profit\": 55000.00\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/trading/orders",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["trading", "orders"]
+            },
+            "description": "Place a limit order with stop loss and take profit"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Open Positions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/trading/positions",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["trading", "positions"]
+            },
+            "description": "Get all open positions with real-time P&L"
+          },
+          "response": []
+        },
+        {
+          "name": "Close Trade (One-Click)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"close_price\": 50500.00\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/trading/trades/:trade_id/close",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["trading", "trades", ":trade_id", "close"],
+              "variable": [
+                {
+                  "key": "trade_id",
+                  "value": "1",
+                  "description": "Trade ID to close"
+                }
+              ]
+            },
+            "description": "Close a trade with one click - calculates P&L automatically"
+          },
+          "response": []
+        },
+        {
+          "name": "Reverse Trade (One-Click)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reverse_price\": 50500.00\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/trading/trades/:trade_id/reverse",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["trading", "trades", ":trade_id", "reverse"],
+              "variable": [
+                {
+                  "key": "trade_id",
+                  "value": "1",
+                  "description": "Trade ID to reverse"
+                }
+              ]
+            },
+            "description": "Close current trade and open opposite position in one click"
+          },
+          "response": []
+        },
+        {
+          "name": "Modify Trade (Update SL/TP)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stop_loss\": 49000.00,\n  \"take_profit\": 56000.00\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/trading/trades/:trade_id/modify",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["trading", "trades", ":trade_id", "modify"],
+              "variable": [
+                {
+                  "key": "trade_id",
+                  "value": "1",
+                  "description": "Trade ID to modify"
+                }
+              ]
+            },
+            "description": "Modify stop loss and take profit for an open trade"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Trade History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/trading/history?limit=50&offset=0",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["trading", "history"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "50"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                },
+                {
+                  "key": "symbol",
+                  "value": "BTCUSDT",
+                  "disabled": true
+                },
+                {
+                  "key": "start_date",
+                  "value": "2025-10-01",
+                  "disabled": true
+                },
+                {
+                  "key": "end_date",
+                  "value": "2025-10-17",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Get closed trades history with filters"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📡 Signals",
+      "item": [
+        {
+          "name": "Get All Signals",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/trading/signals?limit=50",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["trading", "signals"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "50"
+                },
+                {
+                  "key": "offset",
+                  "value": "0",
+                  "disabled": true
+                },
+                {
+                  "key": "symbol",
+                  "value": "ETHUSD",
+                  "disabled": true
+                },
+                {
+                  "key": "action",
+                  "value": "BUY",
+                  "disabled": true
+                },
+                {
+                  "key": "source",
+                  "value": "webhook",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Get all trading signals with optional filters"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Signals by Symbol",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/trading/signals?symbol=ETHUSD&limit=20",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["trading", "signals"],
+              "query": [
+                {
+                  "key": "symbol",
+                  "value": "ETHUSD"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            },
+            "description": "Get signals for specific symbol"
+          },
+          "response": []
+        },
+        {
+          "name": "Get BUY Signals Only",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/trading/signals?action=BUY&limit=50",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["trading", "signals"],
+              "query": [
+                {
+                  "key": "action",
+                  "value": "BUY"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            },
+            "description": "Get only BUY signals"
+          },
+          "response": []
+        },
+        {
+          "name": "Get SELL Signals Only",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/trading/signals?action=SELL&limit=50",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["trading", "signals"],
+              "query": [
+                {
+                  "key": "action",
+                  "value": "SELL"
+                },
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            },
+            "description": "Get only SELL signals"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Signal by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/trading/signals/:signal_id",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["trading", "signals", ":signal_id"],
+              "variable": [
+                {
+                  "key": "signal_id",
+                  "value": "1",
+                  "description": "Signal ID"
+                }
+              ]
+            },
+            "description": "Get specific signal by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Validate Signal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"is_valid\": true,\n  \"notes\": \"Signal confirmed with multiple indicators\",\n  \"validated_by\": \"trader_john\",\n  \"confidence_score\": 85\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/trading/signals/:signal_id/validate",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["trading", "signals", ":signal_id", "validate"],
+              "variable": [
+                {
+                  "key": "signal_id",
+                  "value": "1",
+                  "description": "Signal ID to validate"
+                }
+              ]
+            },
+            "description": "Mark signal as validated (good) or false"
+          },
+          "response": []
+        },
+        {
+          "name": "Reject False Signal",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"False breakout - no volume confirmation\",\n  \"rejected_by\": \"trader_john\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/trading/signals/:signal_id/reject",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["trading", "signals", ":signal_id", "reject"],
+              "variable": [
+                {
+                  "key": "signal_id",
+                  "value": "1",
+                  "description": "Signal ID to reject"
+                }
+              ]
+            },
+            "description": "Quick endpoint to reject/mark signal as false"
+          },
+          "response": []
+        },
+        {
+          "name": "Execute Signal as Trade",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 100.0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/trading/signals/:signal_id/execute",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["trading", "signals", ":signal_id", "execute"],
+              "variable": [
+                {
+                  "key": "signal_id",
+                  "value": "1",
+                  "description": "Signal ID to execute"
+                }
+              ]
+            },
+            "description": "Execute signal by placing a trade and linking them"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Signal Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/trading/signals/stats",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["trading", "signals", "stats"]
+            },
+            "description": "Get signal accuracy statistics (validation rate, false signal rate, etc.)"
+          },
+          "response": []
+        },
+        {
+          "name": "Bulk Validate Signals",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"signal_ids\": [1, 2, 3, 4, 5],\n  \"is_valid\": false,\n  \"notes\": \"All signals during market manipulation period\",\n  \"validated_by\": \"admin\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/trading/signals/bulk-validate",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["trading", "signals", "bulk-validate"]
+            },
+            "description": "Validate or reject multiple signals at once"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔔 Webhook",
+      "item": [
+        {
+          "name": "TradingView Webhook",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"BUY\",\n  \"symbol\": \"BTCUSDT\",\n  \"price\": 50000.00,\n  \"quantity\": 0.01,\n  \"timestamp\": \"2025-10-17T12:00:00Z\",\n  \"source\": \"tradingview\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/webhook/tradingview",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["webhook", "tradingview"]
+            },
+            "description": "Receive webhook from TradingView"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📈 Instruments Management",
+      "item": [
+        {
+          "name": "Get All Allowed Instruments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}{{apiPrefix}}/trading/instruments",
+              "host": ["{{baseUrl}}{{apiPrefix}}"],
+              "path": ["trading", "instruments"]
+            },
+            "description": "Get list of all instruments allowed for trading"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🧪 Test Scenarios",
+      "item": [
+        {
+          "name": "Complete Trading Workflow",
+          "item": [
+            {
+              "name": "1. Get Available Instruments",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}{{apiPrefix}}/chart/instruments",
+                  "host": ["{{baseUrl}}{{apiPrefix}}"],
+                  "path": ["chart", "instruments"]
+                },
+                "description": "Step 1: Get list of instruments"
+              },
+              "response": []
+            },
+            {
+              "name": "2. Get Latest Price",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}{{apiPrefix}}/chart/latest-price?symbol=BTCUSDT",
+                  "host": ["{{baseUrl}}{{apiPrefix}}"],
+                  "path": ["chart", "latest-price"],
+                  "query": [
+                    {
+                      "key": "symbol",
+                      "value": "BTCUSDT"
+                    }
+                  ]
+                },
+                "description": "Step 2: Get current price"
+              },
+              "response": []
+            },
+            {
+              "name": "3. Get Chart Data",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}{{apiPrefix}}/chart/ohlcv?symbol=BTCUSDT&timeframe=1h&limit=100",
+                  "host": ["{{baseUrl}}{{apiPrefix}}"],
+                  "path": ["chart", "ohlcv"],
+                  "query": [
+                    {
+                      "key": "symbol",
+                      "value": "BTCUSDT"
+                    },
+                    {
+                      "key": "timeframe",
+                      "value": "1h"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "100"
+                    }
+                  ]
+                },
+                "description": "Step 3: Get historical chart data"
+              },
+              "response": []
+            },
+            {
+              "name": "4. Place Market Order",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"symbol\": \"BTCUSDT\",\n  \"action\": \"BUY\",\n  \"quantity\": 0.01,\n  \"order_type\": \"MARKET\"\n}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}{{apiPrefix}}/trading/orders",
+                  "host": ["{{baseUrl}}{{apiPrefix}}"],
+                  "path": ["trading", "orders"]
+                },
+                "description": "Step 4: Place order"
+              },
+              "response": []
+            },
+            {
+              "name": "5. Get Open Positions",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}{{apiPrefix}}/trading/positions",
+                  "host": ["{{baseUrl}}{{apiPrefix}}"],
+                  "path": ["trading", "positions"]
+                },
+                "description": "Step 5: Check open positions"
+              },
+              "response": []
+            },
+            {
+              "name": "6. Get All Trades",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}{{apiPrefix}}/trading/trades?page=1&limit=10",
+                  "host": ["{{baseUrl}}{{apiPrefix}}"],
+                  "path": ["trading", "trades"],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
+                },
+                "description": "Step 6: View all trades"
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

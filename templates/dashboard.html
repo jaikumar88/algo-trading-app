@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Trading App{% endblock %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block head_js %}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+{% endblock %}
+
+{% block content %}
+  <div class="container-fluid">
+    <div class="row g-3">
+      <div class="col-12 col-lg-8">
+        <div class="card">
+          <h5 class="mb-3">Trades Today</h5>
+          <div class="chart-wrap">
+            <canvas id="tradesToday"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-4">
+        <div class="card small">
+          <h6 class="text-muted">Summary</h6>
+          <div class="mt-2"><strong>No. of trades:</strong> <div id="today-count" class="d-inline ms-2">...</div></div>
+          <div class="mt-2"><strong>PNL (today):</strong> <div id="today-pnl" class="d-inline ms-2">...</div></div>
+        </div>
+        <div class="card">
+          <h6 class="text-muted">Weekly / Monthly PnL</h6>
+          <div class="chart-wrap">
+            <canvas id="pnlChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="card">
+          <h5>Recent Trades</h5>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead><tr><th>ID</th><th>Symbol</th><th>Action</th><th>Qty</th><th>Open</th><th>Close</th><th>PnL</th><th>Status</th><th>Opened</th></tr></thead>
+              <tbody>
+                {% for t in trades %}
+                <tr>
+                  <td>{{ t.id }}</td>
+                  <td>{{ t.symbol }}</td>
+                  <td>{{ t.action }}</td>
+                  <td>{{ t.quantity }}</td>
+                  <td>{{ t.open_price }}</td>
+                  <td>{{ t.close_price or '' }}</td>
+                  <td>{{ t.profit_loss or '' }}</td>
+                  <td>{{ t.status }}</td>
+                  <td>{{ t.open_time }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function loadMetrics(){
+  const r = await fetch('/api/metrics');
+  const j = await r.json();
+  document.getElementById('today-count').textContent = j.today.count;
+  document.getElementById('today-pnl').textContent = j.today.pnl.toFixed(2);
+
+  const ctx = document.getElementById('tradesToday').getContext('2d');
+  new Chart(ctx, { type:'bar', data:{ labels:j.today.hours, datasets:[{label:'Trades per hour', data:j.today.hour_counts, backgroundColor:'#0b5cff'}] }, options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}} } });
+
+  const ctx2 = document.getElementById('pnlChart').getContext('2d');
+  new Chart(ctx2, { type:'line', data:{ labels:j.week.labels, datasets:[{label:'Weekly PnL', data:j.week.values, borderColor:'#16a34a', tension:0.3, fill:false},{label:'Monthly PnL', data:j.month.values, borderColor:'#b91c1c', tension:0.3, fill:false}] }, options:{ responsive:true, maintainAspectRatio:false } });
+}
+loadMetrics().catch(console.error);
+</script>
+{% endblock %}

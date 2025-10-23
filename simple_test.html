@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple API Test</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1e1e1e;
+            color: #00ff00;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            background: #00aa00;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            background: #00ff00;
+            color: black;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 20px;
+            background: #000;
+            border: 2px solid #00ff00;
+            white-space: pre-wrap;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        .success {
+            color: #00ff00;
+        }
+        .error {
+            color: #ff0000;
+        }
+        .info {
+            color: #00aaff;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 API ENDPOINT TEST</h1>
+    <p class="info">Testing: http://localhost:5000/api/trading/trades?page=1&limit=50</p>
+    
+    <button onclick="testAPI()">🚀 TEST API NOW</button>
+    <button onclick="clearResult()">Clear</button>
+    
+    <div id="result">Click "TEST API NOW" button...</div>
+
+    <script>
+        async function testAPI() {
+            const resultDiv = document.getElementById('result');
+            const url = 'http://localhost:5000/api/trading/trades?page=1&limit=50';
+            
+            resultDiv.innerHTML = '<span class="info">⏳ Testing API endpoint...</span>\n';
+            resultDiv.innerHTML += `<span class="info">URL: ${url}</span>\n\n`;
+            
+            try {
+                const startTime = performance.now();
+                
+                const response = await fetch(url);
+                
+                const endTime = performance.now();
+                const duration = (endTime - startTime).toFixed(2);
+                
+                resultDiv.innerHTML += `<span class="success">✅ HTTP Status: ${response.status} ${response.statusText}</span>\n`;
+                resultDiv.innerHTML += `<span class="success">✅ Response Time: ${duration}ms</span>\n`;
+                resultDiv.innerHTML += `<span class="success">✅ Content-Type: ${response.headers.get('content-type')}</span>\n\n`;
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                resultDiv.innerHTML += '<span class="success">✅ JSON PARSED SUCCESSFULLY</span>\n\n';
+                resultDiv.innerHTML += '<span class="info">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>\n';
+                resultDiv.innerHTML += '<span class="info">📊 SUMMARY:</span>\n';
+                resultDiv.innerHTML += `  • Total Trades: ${data.summary.total}\n`;
+                resultDiv.innerHTML += `  • Open: ${data.summary.open}\n`;
+                resultDiv.innerHTML += `  • Closed: ${data.summary.closed}\n`;
+                resultDiv.innerHTML += `  • Total P&L: $${data.summary.total_pnl}\n\n`;
+                
+                resultDiv.innerHTML += '<span class="info">📄 PAGINATION:</span>\n';
+                resultDiv.innerHTML += `  • Page: ${data.pagination.page} of ${data.pagination.total_pages}\n`;
+                resultDiv.innerHTML += `  • Limit: ${data.pagination.limit}\n`;
+                resultDiv.innerHTML += `  • Total Records: ${data.pagination.total}\n`;
+                resultDiv.innerHTML += `  • Has Next: ${data.pagination.has_next}\n`;
+                resultDiv.innerHTML += `  • Has Previous: ${data.pagination.has_prev}\n\n`;
+                
+                resultDiv.innerHTML += '<span class="info">🔍 TRADES DATA:</span>\n';
+                resultDiv.innerHTML += `  • Trades Array Length: ${data.trades.length}\n`;
+                resultDiv.innerHTML += `  • Trades Array Type: ${typeof data.trades}\n`;
+                resultDiv.innerHTML += `  • Is Array: ${Array.isArray(data.trades)}\n\n`;
+                
+                if (data.trades && data.trades.length > 0) {
+                    resultDiv.innerHTML += '<span class="success">✅ TRADES DATA EXISTS!</span>\n\n';
+                    resultDiv.innerHTML += '<span class="info">First 3 Trades:</span>\n';
+                    resultDiv.innerHTML += '<span class="info">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>\n';
+                    
+                    data.trades.slice(0, 3).forEach((trade, index) => {
+                        resultDiv.innerHTML += `\n<span class="success">[${index + 1}] Trade #${trade.id}</span>\n`;
+                        resultDiv.innerHTML += `  Symbol: ${trade.symbol}\n`;
+                        resultDiv.innerHTML += `  Action: ${trade.action}\n`;
+                        resultDiv.innerHTML += `  Status: ${trade.status}\n`;
+                        resultDiv.innerHTML += `  Quantity: ${trade.quantity}\n`;
+                        resultDiv.innerHTML += `  Open Price: $${trade.open_price}\n`;
+                        resultDiv.innerHTML += `  Close Price: ${trade.close_price || 'N/A'}\n`;
+                        resultDiv.innerHTML += `  P&L: ${trade.profit_loss ? '$' + trade.profit_loss : 'OPEN'}\n`;
+                    });
+                    
+                    resultDiv.innerHTML += '\n<span class="info">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>\n';
+                    resultDiv.innerHTML += '\n<span class="success">🎉 SUCCESS! API IS WORKING PERFECTLY!</span>\n';
+                    resultDiv.innerHTML += '<span class="success">The endpoint is returning data correctly.</span>\n\n';
+                    
+                    resultDiv.innerHTML += '<span class="info">Full JSON Response (first 1000 chars):</span>\n';
+                    resultDiv.innerHTML += '<span class="info">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>\n';
+                    const jsonStr = JSON.stringify(data, null, 2);
+                    resultDiv.innerHTML += jsonStr.substring(0, 1000) + '...\n';
+                    
+                } else {
+                    resultDiv.innerHTML += '<span class="error">❌ NO TRADES IN RESPONSE!</span>\n';
+                    resultDiv.innerHTML += '<span class="error">The trades array is empty or undefined.</span>\n';
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML += `\n<span class="error">❌ ERROR OCCURRED!</span>\n`;
+                resultDiv.innerHTML += `<span class="error">Error Type: ${error.name}</span>\n`;
+                resultDiv.innerHTML += `<span class="error">Error Message: ${error.message}</span>\n`;
+                resultDiv.innerHTML += `<span class="error">Stack: ${error.stack}</span>\n`;
+            }
+        }
+        
+        function clearResult() {
+            document.getElementById('result').innerHTML = 'Click "TEST API NOW" button...';
+        }
+        
+        // Auto-run test on page load
+        window.onload = () => {
+            console.log('Page loaded, auto-running test...');
+            testAPI();
+        };
+    </script>
+</body>
+</html>
