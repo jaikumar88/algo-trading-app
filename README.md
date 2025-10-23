@@ -1,15 +1,13 @@
-# RAG Trading Assistant
+# Advanced Algorithmic Trading System
 
-A comprehensive trading assistant that integrates:
-- **TradingView webhooks** for receiving trade signals
-- **OCR** (Tesseract/EasyOCR) for extracting trade data from images
-- **Gemini AI** (optional) for structured trade parsing
-- **Telegram** forwarding for real-time notifications
-- **Flask backend** with REST API
-- **React frontend** (Vite) with dashboard, signals table, and settings
-- **RAG pipeline** with in-memory vector store
-- **SQLAlchemy ORM** with SQLite/PostgreSQL support
-- **Background jobs** via Redis + RQ (optional)
+A professional trading system with modern web interface and GitHub Pages deployment:
+
+- **🎯 TradingView Integration**: Webhook-based signal processing with immediate opposite trade closing
+- **⚡ Real-time Trading**: Instant signal processing with Delta Exchange API integration  
+- **🌐 Modern Frontend**: React client with TradingView charts, multi-symbol support, GitHub Pages deployment
+- **🤖 Smart Trading Logic**: Automatic opposite position closing, risk management, duplicate prevention
+- **📊 Professional UI**: Multi-symbol charts, real-time positions, trade history, performance analytics
+- **🚀 Production Ready**: Docker support, PostgreSQL, auto-reconnecting tunnels, service monitoring
 
 ---
 
@@ -537,3 +535,14 @@ For issues or questions:
 - Open a GitHub issue
 - Check [Troubleshooting](#troubleshooting) section
 - Review client-specific docs in [client/README.md](client/README.md)
+
+## 🚀 GitHub Pages Deployment
+
+Your React trading client is configured for automatic GitHub Pages deployment:
+
+- **Development**: `npm run dev` (uses localhost:5000 via proxy)
+- **Production**: Automatic deployment to `https://jaikumar88.github.io/algo-trading-app/`
+- **API**: Uses ngrok tunnel for webhook access
+- **Auto-deploy**: Push to main branch triggers GitHub Actions deployment
+
+**Professional trading system ready for production use!** 📈
